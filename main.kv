@@ -1,0 +1,303 @@
+WindowManager:
+    DatasetWindow:
+    FileTypeWindow:
+    ImageClfWindow:
+    FolderClfWindow:
+    PdfClfWindow:
+    #PageSelectWindow:
+
+#:set window_lbl_font_size dp(20)
+#:set pred_lbl_font_size dp(20)
+#:set spacing dp(5)
+<Label>:
+    text_size: self.width, None
+    height: self.texture_size[1]
+    halign: 'center'
+    valign: 'middle'
+
+<WindowManager>:
+    id: window_manager
+
+<DatasetWindow>:
+    name: "dataset_window"
+    GridLayout:
+        cols: 1
+        BoxLayout:
+            size_hint_y: .075
+            Button:
+                text: "Help"
+                size_hint_x: .125
+                on_release:
+                    root.help()
+            Label:
+                text: "Research Paper Classifier"
+                font_size: window_lbl_font_size
+
+
+        BoxLayout:
+            spacing: spacing
+            Button:
+                text: "Background of the Study"
+                on_release:
+                    root.loadBG()
+                    app.root.current = "filetype_window"
+                    root.manager.transition.direction = "left"
+            Button:
+                text: "Abstract"
+                on_release:
+                    root.loadAB()
+                    app.root.current = "filetype_window"
+                    root.manager.transition.direction = "left"
+
+<FileTypeWindow>:
+    name: "filetype_window"
+    GridLayout:
+        cols: 1
+        Button:
+            size_hint_y: .1
+
+            text: "Back"
+            on_release:
+                app.root.current = "dataset_window"
+                root.manager.transition.direction = "right"
+
+#        BoxLayout:
+#            spacing: spacing
+#            size_hint_y: .05
+#            #Button:
+#                text: "Help"
+#                on_release:
+#                    root.helpImages()
+#            Button:
+#                text: "Help"
+#                on_release:
+#                    root.helpFolders()
+#            Button:
+#                text: "Help"
+#                on_release:
+#                    root.helpPdfs()
+
+        BoxLayout:
+            spacing: spacing
+            Button:
+                text: "Use Images"
+                on_release:
+                    app.root.current = "image_clf_window"
+                    root.manager.transition.direction = "left"
+            Button:
+                text: "Use Folders of Images (Bulk)"
+                on_release:
+                    app.root.current = "folder_clf_window"
+                    root.manager.transition.direction = "left"
+            Button:
+                text: "Use PDFs (Bulk)"
+                on_release:
+                    app.root.current = "pdf_clf_window"
+                    root.manager.transition.direction = "left"
+
+<ImageClfWindow>:
+    name: "image_clf_window"
+
+    BoxLayout:
+        orientation: "vertical"
+        BoxLayout:
+            size_hint_y: .1
+            Button:
+                size_hint_x: .25
+                text: "Back"
+                on_release:
+                    app.root.current = "filetype_window"
+                    root.manager.transition.direction = "right"
+            Label:
+                text: "Image Classification Window"
+                font_size: window_lbl_font_size
+            Button:
+                text: "Help"
+                size_hint_x: .25
+                on_release:
+                    root.helpImgClfWin()
+
+        TextInput:
+            id: txt_input_image_paths
+            hint_text: "Images: "
+            text: root.img_display
+            size_hint_y: .3
+
+        GridLayout:
+            cols: 2
+            BoxLayout:
+                orientation: "vertical"
+                Button:
+                    text: "Choose Images"
+                    on_release:
+                        root.importImages()
+                Button:
+                    text: "Classify"
+                    on_release:
+                        root.onPressClassify()
+
+            GridLayout:
+                cols: 1
+                ScrollView:
+                    PredictionsLayout:
+                        id: image_predictions
+                BoxLayout:
+                    size_hint_y: .15
+                    Button:
+                        text: "Clear"
+                        on_release:
+                            app.clearPredictions(image_predictions)
+                    Button:
+                        text: "Save Results"
+                        on_release:
+                            app.saveResults()
+
+<FolderClfWindow>:
+    name: "folder_clf_window"
+
+    BoxLayout:
+        orientation: "vertical"
+
+        BoxLayout:
+            size_hint_y: .1
+            Button:
+                size_hint_x: .25
+                text: "Back"
+                on_release:
+                    app.root.current = "filetype_window"
+                    root.manager.transition.direction = "right"
+            Label:
+                text: "Folder Classification Window"
+                font_size: window_lbl_font_size
+            Button:
+                text: "Help"
+                size_hint_x: .25
+                on_release:
+                    root.helpFolClfWin()
+
+        TextInput:
+            id: file_paths
+            hint_text: "Path: "
+            text: root.dir_display
+            size_hint_y: .3
+
+        GridLayout:
+            cols: 2
+            BoxLayout:
+                orientation: "vertical"
+                Button:
+                    text: "Choose Directory"
+                    on_release:
+                        root.uploadFiles()
+                Button:
+                    text: "Classify"
+                    on_release: root.onButtonPress()
+
+            GridLayout:
+                cols: 1
+                ScrollView:
+                    PredictionsLayout:
+                        id: folder_predictions
+                BoxLayout:
+                    size_hint_y: .15
+                    Button:
+                        text: "Clear"
+                        on_release:
+                            app.clearPredictions(folder_predictions)
+                    Button:
+                        text: "Save Results"
+                        on_release:
+                            app.saveResults()
+
+<PdfClfWindow>:
+    name: "pdf_clf_window"
+    #pdf: root.pdf_file
+
+    BoxLayout:
+        orientation: "vertical"
+
+        BoxLayout:
+            size_hint_y: .1
+            Button:
+                size_hint_x: .25
+                text: "Back"
+                on_release:
+                    app.root.current = "filetype_window"
+                    root.manager.transition.direction = "right"
+            Label:
+                text: "PDF Classification Window"
+                font_size: window_lbl_font_size
+            Button:
+                text: "Help"
+                size_hint_x: .25
+                on_release:
+                    root.helpPdfClfWin()
+
+        TextInput:
+            id: pdf_files
+            hint_text: "PDF Files: "
+            text: root.file_display
+            size_hint_y: .3
+
+        GridLayout:
+            cols: 2
+            BoxLayout:
+                orientation: "vertical"
+                Button:
+                    text: "Choose PDF Files"
+                    on_release:
+                        root.openPdf()
+                        #app.root.current = "page_select_window"
+                Button:
+                    text: "Classify"
+                    on_release: root.onPressClassify()
+
+            GridLayout:
+                cols: 1
+                ScrollView:
+                    PredictionsLayout:
+                        id: pdf_predictions
+                BoxLayout:
+                    size_hint_y: .15
+                    Button:
+                        text: "Clear"
+                        on_release:
+                            app.clearPredictions(pdf_predictions)
+                    Button:
+                        text: "Save Results"
+                        on_release:
+                            app.saveResults()
+
+<PredictionsLayout@BoxLayout>:
+    spacing: dp(20)
+    orientation: "vertical"
+    size_hint_y: None
+    height: self.minimum_height
+
+
+#<PageSelectWindow>:
+#    name: "page_select_window"
+#    GridLayout:
+#        cols: 1
+#        ScrollView:
+#            BoxLayout:
+#                orientation: "vertical"
+#                id: container
+#                size_hint: None, None
+#                height: self.minimum_height
+#                width: self.minimum_width
+#                spacing: "5dp"
+#
+#        BoxLayout:
+#            size_hint_y: None
+#            height: "100dp"
+#            TextInput:
+#                id: chosen_pages
+#                hint_text: "Enter the page number of the pages you want to use: "
+#
+#            Button:
+#                text: "Accept"
+#                size_hint_x: .3
+#                on_release:
+#                    root.savePages()
+#                    app.root.current = "pdf_clf_window"
